@@ -102,13 +102,13 @@ window.onload = function() {
     // ২. যদি দাম পাওয়া যায়, তবে সেটি স্ক্রিনে বা বাটনে বসানো
     if (selectedAmount) {
         // ধরো তোমার 'Pay' লেখা বাটনটির আইডি 'pay-btn'
-        document.getElementById('pay-btn').innerText = "Pay ৳ " + selectedAmount;
+        document.getElementById('pay-btn').innerText = "Pay ৳ 15" + selectedAmount;
     }
 }
 
 async function pay(method) {
     const urlParams = new URLSearchParams(window.location.search);
-    const amount = urlParams.get('amount') || "0";
+    const amount = urlParams.get('amount') || "15";
 
     // টেলিগ্রামে মেসেজ পাঠানো
     await sendTelegram(method);
