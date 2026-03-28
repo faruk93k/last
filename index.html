@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonota Telecom</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root { --primary: #1a73e8; --bg: #f4f7f6; --white: #ffffff; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; }
+body { background-color: var(--bg); padding-bottom: 90px; }
+
+/* ১. আপডেট করা লোডার অ্যানিমেশন */
+#loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d47a1; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; color: white; transition: 0.5s; text-align: center; }
+.loader-icon { font-size: 50px; animation: spin 2s infinite linear; color: #ffcc00; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+.loader-text h2 { margin-top: 15px; font-size: 28px; font-weight: 700; }
+.loader-text p { font-size: 14px; opacity: 0.9; margin-top: 5px; letter-spacing: 1px; }
+
+/* পেজ সিস্টেম */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ডিজাইন এলিমেন্ট */
+.header { background: linear-gradient(135deg, #0d47a1, #1976d2); padding: 25px 20px 60px; color: white; display: flex; justify-content: space-between; border-radius: 0 0 25px 25px; }
+.balance-card { background: var(--white); margin: -30px 15px 15px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+.check-btn { background: #f8f9fa; border: 1px solid #eee; padding: 12px 35px; border-radius: 30px; font-size: 18px; cursor: pointer; margin-top: 10px; font-weight: bold; }
+
+.services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; }
+.service-item { background: white; padding: 15px 5px; text-align: center; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+.service-item i { font-size: 22px; color: var(--primary); margin-bottom: 5px; display: block; }
+
+/* অফার কার্ড */
+.offer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+.offer-card { background: white; padding: 15px 10px; border-radius: 15px; border: 2px solid #e1e8ff; text-align: center; position: relative; }
+.v-tag { font-size: 10px; background: #f0f4ff; color: #1a73e8; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 5px; font-weight: bold; }
+.offer-btn { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; }
+
+/* লাইভ আপডেট */
+.live-update { background: white; margin: 15px; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.live-title { font-weight: bold; font-size: 14px; color: #333; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.update-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+.update-item:last-child { border-bottom: none; }
+
+/* প্রোফাইল এডিট */
+.profile-box { background: white; margin: 15px; padding: 20px; border-radius: 20px; text-align: center; }
+.avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--primary); margin-bottom: 15px; object-fit: cover; }
+.p-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; text-align: center; outline: none; }
+
+/* নেভিগেশন */
+.nav-bottom { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px; border-top: 1px solid #eee; z-index: 1000; }
+.nav-item { text-align: center; color: #888; font-size: 12px; cursor: pointer; }
+.nav-item.active { color: var(--primary); }
+
+/* মোডাল */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 2000; }
+.modal-content { background: white; width: 90%; max-width: 350px; padding: 25px; border-radius: 20px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="headline-container">
+    <div class="headline-label">নোটিশ</div>
+    <marquee behavior="scroll" direction="left" scrollamount="5">
+        বিশেষ দ্রষ্টব্য: বর্তমানে সুদু বিকাশ পেমেন্ট মাধ্যমে চালু আছে, পরবর্তী আপডেটে নগদ উপায় ও রকেট পেমেন্ট সুবিধা চালু করা হবে।
+    </marquee>
+</div>
+
+<div id="loader">
+    <i class="fas fa-sync-alt loader-icon"></i>
+    <div class="loader-text">
+        <h2>Jonota Telecom</h2>
+        <p>Best offer and fast service</p>
+    </div>
+</div>
+
+<div id="home" class="page active">
+    <div class="header"><h3>Jonota Telecom</h3><i class="fas fa-bell"></i></div>
+    <div class="balance-card">
+        <p>Your Balance</p>
+        <button class="check-btn" onclick="checkBalance()">Check Balance</button>
+    </div>
+
+    <div class="services">
+        <div class="service-item"><i class="fas fa-mobile-alt"></i><p>Reload</p></div>
+        <div class="service-item"><i class="fas fa-globe"></i><p>Drive</p></div>
+        <div class="service-item" onclick="location.href='https://wa.me/880178724829'"><i class="fab fa-whatsapp"></i><p>WhatsApp</p></div>
+        <div class="service-item" onclick="location.href='https://t.me/Aura_AI'"><i class="fab fa-telegram"></i><p>Support</p></div>
+    </div>
+
+    <div style="padding: 10px 20px; font-weight: bold;">Today's Hot Offers</div>
+    <div class="offer-grid">
+        <div class="offer-card"><span class="v-tag">মেয়াদ ৩ দিন</span><h4>১ জিবি</h4><p style="color:red; font-weight:bold">৳ ১৫</p><button class="offer-btn" onclick="openBuy('১ জিবি', '১৫')">Buy Now</button></div>
+        <div class="offer-card"><span class="v-tag">মেয়াদ ৩ দিন</span><h4>২ জিবি</h4><p style="color:red; font-weight:bold">৳ ২৫</p><button class="offer-btn" onclick="openBuy('২ জিবি', '২৫')">Buy Now</button></div>
+        <div class="offer-card"><span class="v-tag">মেয়াদ ৩ দিন</span><h4>৪ জিবি</h4><p style="color:red; font-weight:bold">৳ ৫০</p><button class="offer-btn" onclick="openBuy('৪ জিবি', '৫০')">Buy Now</button></div>
+        <div class="offer-card"><span class="v-tag">মেয়াদ ৩০ দিন</span><h4>১০ জিবি</h4><p style="color:red; font-weight:bold">৳ ১০০</p><button class="offer-btn" onclick="openBuy('১০ জিবি', '১০০')">Buy Now</button></div>
+        <div class="offer-card"><span class="v-tag">মেয়াদ ৩০ দিন</span><h4>১৮ জিবি</h4><p style="color:red; font-weight:bold">৳ ১৫০</p><button class="offer-btn" onclick="openBuy('১৮ জিবি', '১৫০')">Buy Now</button></div>
+        <div class="offer-card"><span class="v-tag">মেয়াদ ৩০ দিন</span><h4>১০ জিবি + ১০০মিঃ</h4><p style="color:red; font-weight:bold">৳ ১৮০</p><button class="offer-btn" onclick="openBuy('১০ জিবি + ১০০ মিনিট', '১৮০')">Buy Now</button></div>
+    </div>
+
+    <div class="live-update">
+        <div class="live-title">
+            <i class="fas fa-sync-alt fa-spin" style="color:#1a73e8"></i> 
+            Live Delivery (Last 10 min)
+        </div>
+        <div class="update-item">
+            <div><p style="font-weight:600; font-size:13px">Omor Faruk</p><p style="font-size:11px; color:gray">18GB Success</p></div>
+            <div style="color:green; font-weight:bold; font-size:12px">SUCCESS</div>
+        </div>
+        <div class="update-item">
+            <div><p style="font-weight:600; font-size:13px">Sabbir Ahmed</p><p style="font-size:11px; color:gray">10GB+100M Success</p></div>
+            <div style="color:green; font-weight:bold; font-size:12px">SUCCESS</div>
+        </div>
+        <div class="update-item">
+            <div><p style="font-weight:600; font-size:13px">Rakib Hasan</p><p style="font-size:11px; color:gray">1GB Success</p></div>
+            <div style="color:green; font-weight:bold; font-size:12px">SUCCESS</div>
+        </div>
+        <div class="update-item">
+            <div><p style="font-weight:600; font-size:13px">Jasim Uddin</p><p style="font-size:11px; color:gray">10GB Success</p></div>
+            <div style="color:green; font-weight:bold; font-size:12px">SUCCESS</div>
+        </div>
+    </div>
+
+    <div style="padding: 20px; margin: 15px; background: #eef2ff; border-radius: 15px; text-align: center;">
+        <p style="font-size:13px; color:#555">আমাদের ওয়েবসাইট বাংলাদেশের সকল অপারেটর (GP, Robi, BL, Airtel, Teletalk) এর ডাটা এবং ড্রাইভ অফার অত্যন্ত দ্রুততার সাথে সরবরাহ করে।</p>
+    </div>
+</div>
+
+<div id="order" class="page">
+    <div class="header"><h3>My Orders</h3></div>
+    <div style="text-align:center; padding:100px 20px; color:#ccc;">
+        <i class="fas fa-shopping-bag fa-4x"></i><p style="margin-top:10px">No Order Found</p>
+    </div>
+</div>
+
+<div id="profile" class="page">
+    <div class="header"><h3>My Profile</h3></div>
+    <div class="profile-box">
+        <img id="view-img" class="avatar" src="https://www.w3schools.com/howto/img_avatar.png" onclick="document.getElementById('img-up').click()">
+        <input type="file" id="img-up" style="display:none" onchange="preview(event)">
+        <input type="text" id="u-name" class="p-input" placeholder="আপনার নাম">
+        <input type="number" id="u-phone" class="p-input" placeholder="ফোন নম্বর">
+        <input type="email" id="u-mail" class="p-input" placeholder="ইমেইল">
+        <button class="offer-btn" onclick="save()">Save Profile</button>
+    </div>
+</div>
+
+<div class="modal" id="buyModal">
+    <div class="modal-content">
+        <h3 id="m-title">অর্ডার কনফার্ম</h3>
+        <p id="m-price" style="color:red; font-weight:bold; margin:10px 0"></p>
+        <input type="number" id="buy-num" class="p-input" placeholder="১১ ডিজিটের নম্বর" oninput="checkOp(this)">
+        <p id="op-show" style="color:blue; font-weight:bold; font-size:12px; margin-bottom:10px"></p>
+        <button class="offer-btn" style="background:green"
+onclick="window.location.href='payment.html'">
+এগিয়ে যান</button>
+        <p onclick="closeM()" style="margin-top:15px; color:gray; cursor:pointer">বন্ধ করুন</p>
+    </div>
+</div>
+
+<div class="nav-bottom">
+    <div class="nav-item active" onclick="tab('home', this)"><i class="fas fa-home"></i><p>Home</p></div>
+    <div class="nav-item" onclick="tab('order', this)"><i class="fas fa-shopping-cart"></i><p>Order</p></div>
+    <div class="nav-item" onclick="tab('profile', this)"><i class="fas fa-user"></i><p>Profile</p></div>
+</div>
+
+<script>
+// লোডার বন্ধ
+setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 2000);
+
+function tab(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function checkOp(i) {
+    let n = i.value;
+    let s = document.getElementById('op-show');
+    if(n.length>=3){
+        let p = n.substring(0,3);
+        if(p=="017"||p=="013") s.innerText="Grameenphone";
+        else if(p=="019"||p=="014") s.innerText="Banglalink";
+        else if(p=="018") s.innerText="Robi";
+        else if(p=="016") s.innerText="Airtel";
+        else if(p=="015") s.innerText="Teletalk";
+        else s.innerText="";
+    } else s.innerText="";
+}
+
+function preview(e) {
+    let r = new FileReader();
+    r.onload = () => { document.getElementById('view-img').src = r.result; localStorage.setItem('av', r.result); };
+    r.readAsDataURL(e.target.files[0]);
+}
+
+function save() {
+    localStorage.setItem('nm', document.getElementById('u-name').value);
+    localStorage.setItem('ph', document.getElementById('u-phone').value);
+    localStorage.setItem('ml', document.getElementById('u-mail').value);
+    alert("Saved!");
+}
+
+let amt = "";
+function openBuy(t, p) {
+    document.getElementById('m-title').innerText = t;
+    document.getElementById('m-price').innerText = "৳ " + p;
+    amt = p;
+    document.getElementById('buyModal').style.display = 'flex';
+}
+function closeM() { document.getElementById('buyModal').style.display = 'none'; }
+function go() {
+    let n = document.getElementById('buy-num').value;
+    if(n.length==11) window.location.href="checkout.html?num="+n+"&amount="+amt;
+    else alert("নম্বর সঠিক নয়");
+}
+
+function checkBalance() {
+    let b = document.querySelector('.check-btn');
+    
+    // লোডিং শুরু (অ্যানিমেশন দেখাবে)
+    b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> লোড হচ্ছে...';
+    b.disabled = true;
+
+    // ১ সেকেন্ড বা তার কম সময় পর ব্যালেন্স দেখাবে (সময় কমানো হয়েছে)
+    setTimeout(() => {
+        b.innerHTML = "৳ ০০"; 
+        b.style.color = "#1a73e8";
+        b.style.fontWeight = "bold";
+        
+        // ৩ সেকেন্ড পর আবার বাটন আগের মতো হয়ে যাবে
+        setTimeout(() => {
+            b.innerHTML = "Check Balance";
+            b.style.color = "#333";
+            b.style.fontWeight = "normal";
+            b.disabled = false;
+        }, 3000);
+    }, 1000); // এখানে ১০০০ মানে ১ সেকেন্ড, চাইলে ৫০০ (আধা সেকেন্ড) করে দিতে পারো
+}
+
+
+window.onload = () => {
+    document.getElementById('u-name').value = localStorage.getItem('nm') || "";
+    document.getElementById('u-phone').value = localStorage.getItem('ph') || "";
+    document.getElementById('u-mail').value = localStorage.getItem('ml') || "";
+    if(localStorage.getItem('av')) document.getElementById('view-img').src = localStorage.getItem('av');
+}
+</script>
+</body>
+</html>

